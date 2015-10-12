@@ -3,17 +3,27 @@
 <head>
   <meta charset="utf-8">
   
-  <title>evilyin（寒羽光）的博客</title>
+  <title>Android listview 点击item没有变色效果 | evilyin（寒羽光）的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="寒羽光的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="evilyin（寒羽光）的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="又遇一坑：listview里写了半天，发现点击item的时候默认的变灰色的效果没了。
+一开始试着修改listview的属性：android:listSelector 但是改成什么都没有效果。
+后来以为是由于item里面子view把焦点抢走了，导致listview得不到焦点没法响应点击事件，但是写了个OnItemClickListener以后发现点击事件可以正常响应。
+网上找了半天总算找到了原因：因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android listview 点击item没有变色效果">
+<meta property="og:url" content="http://yoursite.com/2015/10/12/Android listview 点击item没有变色效果/index.html">
 <meta property="og:site_name" content="evilyin（寒羽光）的博客">
-<meta property="og:description" content="寒羽光的博客">
+<meta property="og:description" content="又遇一坑：listview里写了半天，发现点击item的时候默认的变灰色的效果没了。
+一开始试着修改listview的属性：android:listSelector 但是改成什么都没有效果。
+后来以为是由于item里面子view把焦点抢走了，导致listview得不到焦点没法响应点击事件，但是写了个OnItemClickListener以后发现点击事件可以正常响应。
+网上找了半天总算找到了原因：因">
+<meta property="og:updated_time" content="2015-10-12T15:31:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="evilyin（寒羽光）的博客">
-<meta name="twitter:description" content="寒羽光的博客">
+<meta name="twitter:title" content="Android listview 点击item没有变色效果">
+<meta name="twitter:description" content="又遇一坑：listview里写了半天，发现点击item的时候默认的变灰色的效果没了。
+一开始试着修改listview的属性：android:listSelector 但是改成什么都没有效果。
+后来以为是由于item里面子view把焦点抢走了，导致listview得不到焦点没法响应点击事件，但是写了个OnItemClickListener以后发现点击事件可以正常响应。
+网上找了半天总算找到了原因：因">
   
     <link rel="alternative" href="/atom.xml" title="evilyin（寒羽光）的博客" type="application/atom+xml">
   
@@ -60,9 +70,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Android listview 点击item没有变色效果" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Android listview 点击item没有变色效果" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/10/12/Android listview 点击item没有变色效果/" class="article-date">
   <time datetime="2015-10-12T13:59:53.000Z" itemprop="datePublished">10月 12 2015</time>
@@ -75,8 +83,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/12/Android listview 点击item没有变色效果/">Android listview 点击item没有变色效果</a>
+    <h1 class="article-title" itemprop="name">
+      Android listview 点击item没有变色效果
     </h1>
   
 
@@ -126,144 +134,40 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-Android-Studio中找不到某些v4包中方法的解决方法" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/" class="article-date">
-  <time datetime="2015-09-08T09:03:41.000Z" itemprop="datePublished">9月 8 2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/">Android Studio中找不到某些v4包中方法的解决方法</a>
-    </h1>
+    <a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android Studio中找不到某些v4包中方法的解决方法</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Android Studio中用gradle管理依赖包很好很强大，但是也会有一些特别奇怪的问题。</p>
-<p>自己在做项目的时候碰到这样的问题：原本gradle里的support-v4:23.0.0用的好好的，但是导入另一个依赖包以后，一些比如Fragment里的getContext(), getChildFragmentManager(), addOnPageChangeListener等方法变成红字，找不到了。由于这几个方法都是support-v4包里的，猜想应该是v4包出了问题。<br>
-        
-          <p class="article-more-link">
-            <a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/#more">阅读全文</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/" data-id="cifo3gudm0004e26ef2xra5ni" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
 
 
-  
-    <article id="post-hexo转移至Mac之中文标题测试" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/08/hexo转移至Mac之中文标题测试/" class="article-date">
-  <time datetime="2015-09-08T06:58:03.000Z" itemprop="datePublished">9月 8 2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/08/hexo转移至Mac之中文标题测试/">hexo转移至Mac之中文标题测试</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>终于把hexo转移到Mac上了，着实花了一点时间，之前在windows上面设置的右上角“fork me on github”找不到在哪里改了，主题也懒得换了，算了吧，用默认主题挺好的，本来就是个低调的人，不需要搞这些花哨的东西。<br>
-        
-          <p class="article-more-link">
-            <a href="/2015/09/08/hexo转移至Mac之中文标题测试/#more">阅读全文</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/08/hexo转移至Mac之中文标题测试/" data-id="cifo3gudb0000e26ej4auhvct" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/测试/">测试</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/08/hello-world/" class="article-date">
-  <time datetime="2015-09-08T06:08:29.000Z" itemprop="datePublished">9月 8 2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/08/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/09/08/hello-world/" data-id="cifo3gudj0003e26e4zzumddr" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-  
-<a href="https://github.com/evilyin"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/52760788cde945287fbb584134c4cbc2bc36f904/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a></section>
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-Android listview 点击item没有变色效果" data-title="Android listview 点击item没有变色效果" data-url="http://yoursite.com/2015/10/12/Android listview 点击item没有变色效果/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'evilyin'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+  </section>
         
           <aside id="sidebar">
   
