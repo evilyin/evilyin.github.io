@@ -3,17 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: Android | evilyin（寒羽光）的博客</title>
+  <title>一篇很好的介绍gradle的文章 | evilyin（寒羽光）的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="寒羽光的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="evilyin（寒羽光）的博客">
-<meta property="og:url" content="http://yoursite.com/tags/Android/index.html">
+  <meta name="description" content="原文地址：http://www.flysnow.org/2015/03/30/manage-your-android-project-with-gradle.html
+根据这篇文章搞定了多渠道打包以及自定义打包apk文件名的问题。
+自己搞的时候还碰到点小问题：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一篇很好的介绍gradle的文章">
+<meta property="og:url" content="http://yoursite.com/2015/11/06/NoTitle/index.html">
 <meta property="og:site_name" content="evilyin（寒羽光）的博客">
-<meta property="og:description" content="寒羽光的博客">
+<meta property="og:description" content="原文地址：http://www.flysnow.org/2015/03/30/manage-your-android-project-with-gradle.html
+根据这篇文章搞定了多渠道打包以及自定义打包apk文件名的问题。
+自己搞的时候还碰到点小问题：">
+<meta property="og:updated_time" content="2015-11-06T06:06:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="evilyin（寒羽光）的博客">
-<meta name="twitter:description" content="寒羽光的博客">
+<meta name="twitter:title" content="一篇很好的介绍gradle的文章">
+<meta name="twitter:description" content="原文地址：http://www.flysnow.org/2015/03/30/manage-your-android-project-with-gradle.html
+根据这篇文章搞定了多渠道打包以及自定义打包apk文件名的问题。
+自己搞的时候还碰到点小问题：">
   
     <link rel="alternative" href="/atom.xml" title="evilyin（寒羽光）的博客" type="application/atom+xml">
   
@@ -60,59 +67,77 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/10/12/Android listview 点击item没有变色效果/" class="archive-article-date">
-  <time datetime="2015-10-12T13:59:53.000Z" itemprop="datePublished">10月 12</time>
+        <section id="main"><article id="post-NoTitle" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/06/NoTitle/" class="article-date">
+  <time datetime="2015-11-06T04:52:57.000Z" itemprop="datePublished">11月 6 2015</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/10/12/Android listview 点击item没有变色效果/">Android listview 点击item没有变色效果</a>
+    <h1 class="article-title" itemprop="name">
+      一篇很好的介绍gradle的文章
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/" class="archive-article-date">
-  <time datetime="2015-09-08T09:03:41.000Z" itemprop="datePublished">9月 8</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/">Android Studio中找不到某些v4包中方法的解决方法</a>
-    </h1>
-  
+        <p>原文地址：<a href="http://www.flysnow.org/2015/03/30/manage-your-android-project-with-gradle.html" target="_blank" rel="external">http://www.flysnow.org/2015/03/30/manage-your-android-project-with-gradle.html</a></p>
+<p>根据这篇文章搞定了多渠道打包以及自定义打包apk文件名的问题。</p>
+<p>自己搞的时候还碰到点小问题：<br><a id="more"></a><br>比如在设置文件名的时候，<code>applicationVariants.all</code> 后面的那部分代码我最初是根据文章中写的放在<code>buildTypes</code>的<code>release</code>和<code>debug</code>下面各一份，然而打debug包的时候并没有起作用。后来看了另外一篇文章，把这部分直接放在<code>android</code>下面，就有效了。</p>
+<p>对了，这篇文章的博客也用的hexo的默认模板……跟我这里一模一样。</p>
+<p>另外还有关于applicationId这个的解释，这篇文章：<a href="http://blog.csdn.net/maosidiaoxian/article/details/41719357" target="_blank" rel="external">http://blog.csdn.net/maosidiaoxian/article/details/41719357</a><br>是翻译的Android官方文档，说的挺清楚的。</p>
 
-    </header>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/11/06/NoTitle/" data-id="cign9cowl0007j06ebarr9jt8" class="article-share-link">Share</a>
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/10/12/Android listview 点击item没有变色效果/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android listview 点击item没有变色效果</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
-</section>
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-NoTitle" data-title="一篇很好的介绍gradle的文章" data-url="http://yoursite.com/2015/11/06/NoTitle/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'evilyin'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+  </section>
         
           <aside id="sidebar">
   
