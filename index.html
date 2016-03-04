@@ -97,6 +97,100 @@
   <div class="post-content">
     <header>
       
+      <time datetime="2016-03-04T08:25:23.000Z"><a href="/2016/03/04/integer/">周五, 3月 4 2016, 4:25:23 下午</a></time>
+
+  
+    <h1 class="title"><a href="/2016/03/04/integer/">从一道算法题看Integer类型的“常量池”</a></h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/算法-Java基础/">算法 Java基础</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>原题：<a href="https://leetcode.com/problems/min-stack/">https://leetcode.com/problems/min-stack/</a></p>
+<p>题目本身不难，要求实现一个栈，除了有push(),pop(),top()三个基本功能外，还能够在常数时间复杂度内获得栈内的最小值。</p>
+<p>思路很容易，维护两个栈，一个栈保存正常的数据，另一个栈的栈顶一直保持是当前的最小值，代码如下</p>
+<pre><code><span class="keyword">class</span> MinStack {
+
+    Stack&lt;Integer&gt; <span class="built_in">stack</span> = <span class="keyword">new</span> Stack&lt;&gt;();
+    Stack&lt;Integer&gt; minStack = <span class="keyword">new</span> Stack&lt;&gt;();
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">int</span> x)</span> </span>{
+        <span class="built_in">stack</span>.push(x);
+        <span class="keyword">if</span> (minStack.size()==<span class="number">0</span> || x&lt;=minStack.peek()) {
+            minStack.push(x);
+        }
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pop</span><span class="params">()</span> </span>{
+        <span class="keyword">if</span> (<span class="built_in">stack</span>.pop()==minStack.peek()){
+            minStack.pop();
+        }
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">top</span><span class="params">()</span> </span>{
+        <span class="keyword">return</span> <span class="built_in">stack</span>.peek();
+    }
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMin</span><span class="params">()</span> </span>{
+        <span class="keyword">return</span> minStack.peek();
+    }
+}
+</code></pre><p>然而，wrong answer了。出错的测试用例是这样：</p>
+<p><code>push(512),push(-1024),push(-1024),push(512),pop,getMin,pop,getMin,pop,getMin</code></p>
+<p>正确的getMin输出结果应该是<code>[-1024,-1024,512]</code>，但是我的结果是<code>[-1024,-1024,-1024]</code></p>
+<p>百思不得其解，代码里怎么都看不出问题在哪，不得已看了别人的答案，思路一模一样的答案里唯一不同的地方在：<br>
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/03/04/integer/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="http://yoursite.com/2016/03/04/integer/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/03/04/integer/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
       <time datetime="2016-03-03T09:11:29.000Z"><a href="/2016/03/03/algorithm/">周四, 3月 3 2016, 5:11:29 下午</a></time>
 
   
