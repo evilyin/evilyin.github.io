@@ -109,6 +109,93 @@
   <div class="post-content">
     <header>
       
+      <time datetime="2016-03-03T09:11:29.000Z"><a href="/2016/03/03/algorithm/">周四, 3月 3 2016, 5:11:29 下午</a></time>
+
+  
+    <h1 class="title"><a href="/2016/03/03/algorithm/">一道算法题</a></h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/算法/">算法</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>原题链接：<a href="https://leetcode.com/problems/product-of-array-except-self/" target="_blank" rel="external">https://leetcode.com/problems/product-of-array-except-self/</a></p>
+<p>题目大意：给一个数组，返回一个数组，要求返回的数组的第i个元素是原数组除了第i个元素的其他所有元素乘积。</p>
+<p>例如给<code>[1,2,3,4]</code>, 返回<code>[24,12,8,6]</code></p>
+<p>很容易想到先把所有数乘起来，然后每扫描到第i个元素时就用总乘积除以元素i，然而题目说了：不许用除法！另外还要求能否用常数级别的空间复杂度完成，返回的数组不算空间复杂度。</p>
+<p>看到这种题目我总是会用一种类似动态规划的思想去考虑，就是先对原始数据做一些处理，前面的处理结果可以用于后续的处理。比如一开始的思路“把所有数乘起来”就是一个处理方式。这题虽然不许用除法，但是思路还是可以继续往这边想。<br>如果把原有数组里的数一个个乘起来，每乘到第i个元素时，就得到从0到i的所有元素乘积；那怎样获得从i到末尾的所有元素乘积呢？倒着再乘一遍就好了！从末尾开始一个个乘，每到i时就得到了末尾到i的所有乘积了。至于去掉元素i，只要乘的时候少乘一个数，扫描到i时乘到i-1就好了。</p>
+<p>于是代码如下：</p>
+<pre><code>public <span class="type">int</span>[] productExceptSelf(<span class="type">int</span>[] nums) {
+    <span class="type">int</span>[] <span class="literal">result</span> = new <span class="type">int</span>[nums.length];
+    <span class="type">int</span> temp = <span class="number">1</span>;
+    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;nums.length; i++) {
+        <span class="keyword">if</span> (i==<span class="number">0</span>) {
+            <span class="literal">result</span>[i]=<span class="number">1</span>;
+        }<span class="keyword">else</span> {
+            <span class="literal">result</span>[i]=<span class="literal">result</span>[i-<span class="number">1</span>]*nums[i-<span class="number">1</span>];
+        }
+    }
+    <span class="keyword">for</span> (<span class="type">int</span> j=nums.length-<span class="number">1</span>; j&gt;=<span class="number">0</span>; j--) {
+        <span class="keyword">if</span> (j!=nums.length-<span class="number">1</span>) {
+            temp *= nums[j+<span class="number">1</span>];
+            <span class="literal">result</span>[j] *= temp;
+        }
+    }
+    <span class="keyword">return</span> <span class="literal">result</span>;
+}
+</code></pre><p>后来看了别人的代码，思路一模一样，但是人家的写法不需要在<code>i==0</code>和<code>j==nums.length-1</code>的时候做特别判断，果然自己在写代码的优雅程度上还是不够啊……</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/03/03/algorithm/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="http://yoursite.com/2016/03/03/algorithm/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/03/03/algorithm/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
       <time datetime="2015-11-06T04:52:57.000Z"><a href="/2015/11/06/NoTitle/">周五, 11月 6 2015, 12:52:57 下午</a></time>
 
   
@@ -367,71 +454,6 @@
 
 
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2015-09-08T06:08:29.000Z"><a href="/2015/09/08/hello-world/">周二, 9月 8 2015, 2:08:29 下午</a></time>
-
-  
-    <h1 class="title"><a href="/2015/09/08/hello-world/">Hello World</a></h1>
-  
-
-
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2015/09/08/hello-world/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="http://yoursite.com/2015/09/08/hello-world/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/09/08/hello-world/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -446,7 +468,7 @@
   </div>
   <footer id="footer" class="inner"><div>
   
-  &copy; 2015 Leo Chen
+  &copy; 2016 Leo Chen
   
 </div>
 Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
