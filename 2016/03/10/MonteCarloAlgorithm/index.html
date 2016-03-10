@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>AlphaGo核心算法之一——蒙特卡洛树搜索 | evilyin（寒羽光）的博客</title>
+  <meta name="author" content="Leo Chen">
+  
+  <meta name="description" content="寒羽光的博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="AlphaGo核心算法之一——蒙特卡洛树搜索"/>
+  <meta property="og:site_name" content="evilyin（寒羽光）的博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="evilyin（寒羽光）的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" type="text/css">
+<link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-03-10T06:36:12.000Z"><a href="/2016/03/10/MonteCarloAlgorithm/">周四, 3月 10 2016, 2:36:12 下午</a></time>
+
+  
+    <h1 class="title">AlphaGo核心算法之一——蒙特卡洛树搜索</h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/算法/">算法</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>近来全球都在关注的一大热点就是谷歌的人工智能围棋程序AlphaGo对阵围棋职业九段李世石的人机大战了，在3月9号的第一场比赛里AlphaGo就取得胜利，可以说轰动了全世界。（这篇文章还没写完，第二盘AlphaGo又赢了。）虽然人工智能对于我这样的初初初级程序员来说有点遥不可及，但是对这样重大的技术突破保持好奇心和求知欲应该也是程序员要具备的素质吧……本着这样的想法，我在网上搜了些资料，了解了一下AlphaGo使用的核心算法之一——蒙特卡洛树搜索。水平所限，只能写一点自己的理解，肯定有很多不对的地方。</p>
+<p><strong>蒙特卡洛算法</strong></p>
+<p>首先从蒙特卡洛算法说起，这个算法其实不是什么新技术，是上世纪40年代美国在第二次世界大战中研制原子弹的“曼哈顿计划”计划的成员S.M.乌拉姆和J.冯·诺伊曼（计算机之父！）首先提出的。主要思想是通过大量随机样本的概率分布来得到所要计算的值。用它最经典的应用来举例——计算圆周率：</p>
+<a id="more"></a>
+<p>正方形内切圆，圆与正方形面积比是π/4：</p>
+<p><img src="http://ww1.sinaimg.cn/mw690/40e8b872gw1f1rtep3c7dj20dw0aggll.jpg" alt=""><br><img src="http://ww3.sinaimg.cn/mw690/40e8b872gw1f1rten6hucj209o02a74i.jpg" alt=""></p>
+<p>在正方形内部随机产生10000个点，通过点的坐标(x,y)计算点与圆心的距离，从而判断该点是不是在圆的内部。</p>
+<p><img src="http://ww3.sinaimg.cn/mw690/40e8b872gw1f1rtentjg6j20dw0dx75v.jpg" alt=""></p>
+<p>如果这些点均匀分布，那么圆内的点应该占到所有点的 π/4，因此将这个比值乘以4，就是π的值。</p>
+<p>对这个例子进行推广，我们可以计算任意一个积分的值，例如计算函数y = x²在 [0, 1] 区间的积分，就是求出下图红色部分的面积。</p>
+<p><img src="http://ww2.sinaimg.cn/mw690/40e8b872gw1f1rteoiptej20d70aawel.jpg" alt=""></p>
+<p>这个函数在 (1,1) 点的取值为1，所以整个红色区域在一个面积为1的正方形里面。在该正方形内部，产生大量随机点，可以计算出有多少点落在红色区域（判断条件 y &lt; x2）。这个比重就是所要求的积分值。</p>
+<p><strong>蒙特卡洛树搜索</strong></p>
+<p>蒙特卡洛树搜索（Monte-Carlo Tree Search，MCTS）是用于人工智能选择最优解的算法，典型应用是在博弈游戏中。基本思想也很简单，以围棋为例：</p>
+<p>建立一个搜索树，节点是当前的局面，节点的子节点是下一步棋后形成的局面，根节点就是一无所有的空棋盘。首先在根节点中随机选择一个子节点，相当于在棋盘中随机下了一步棋，然后子节点继续随机选择子节点，直到叶子节点也就是分出胜负的状态。如果胜了，那把刚才路径上的所有节点权重都加1，这样下次随机时有更大的可能会随机到这些点。</p>
+<p><img src="http://ww3.sinaimg.cn/mw690/40e8b872gw1f1rx1qt6cyj20fv06ht9a.jpg" alt=""></p>
+<p>上面的过程重复无数次，越是有可能胜利的下法，权重就会越来越高，最后选择胜率最大的那个方案落子。这个时候，这一步棋才真正下到棋盘上。</p>
+<p>当然，如果完全按照这个原始的算法，要搜索的数量级实在太大了。围棋有19x19=361个点，那么搜索树的节点至少也是361!个，数量级大概是10的170次方，已经超过了宇宙中所有原子的数量。因此AlphaGo还采用了更加复杂的方法对搜索树进行剪枝。具体的内容无法在这里展开了，毕竟我只是关注算法……</p>
+<p>最后附上链接，其中<a href="https://www.zhihu.com/question/39905662/answer/88895000" target="_blank" rel="external">左右互搏，青出于蓝而胜于蓝？—阿尔法狗原理解析</a>这篇文章比较清晰易懂，可以一看，感觉<a href="http://www.dcine.com/2016/01/28/alphago/" target="_blank" rel="external">How AlphaGo Works</a>这篇写的还不如前者好懂。</p>
+<p>参考链接：</p>
+<p><a href="http://www.ruanyifeng.com/blog/2015/07/monte-carlo-method.html" target="_blank" rel="external">蒙特卡罗方法入门</a></p>
+<p><a href="http://mcts.ai/index.html" target="_blank" rel="external">Monte Carlo Tree Search</a></p>
+<p><a href="https://www.zhihu.com/question/39905662/answer/88895000" target="_blank" rel="external">左右互搏，青出于蓝而胜于蓝？—阿尔法狗原理解析</a></p>
+<p><a href="http://www.dcine.com/2016/01/28/alphago/" target="_blank" rel="external">How AlphaGo Works</a> 英文，里面有中文翻译的链接。</p>
+<p><a href="https://www.deepmind.com/alpha-go.html" target="_blank" rel="external">AlphaGo项目主页</a> 其中有nature上发表的那篇论文的链接。</p>
+
+      
+    </div>
+    <footer>
+      
+          
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <span class="jiathis_txt">分享到：</span>
+  <a class="jiathis_button_weixin">微信</a>
+  <a class="jiathis_button_tsina">新浪微博</a>
+  <a class="jiathis_button_renren">人人网</a>
+  <a class="jiathis_button_qzone">QQ空间</a>
+  <a class="jiathis_button_douban">豆瓣</a>
+  <a class="jiathis_button_pocket">Pocket</a>
+  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+          <div class="clearfix"></div>
+          <nav id="pagination">
+  
+  
+    <a href="/2016/03/08/regexp/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+      <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="/2016/03/10/MonteCarloAlgorithm/"></div>
+<!-- Duoshuo Comment END -->
+  
+</section>
+
+
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2016 Leo Chen
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js" type="text/javascript"></script>
+<script src="/js/gallery.js" type="text/javascript"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"evilyin"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>
