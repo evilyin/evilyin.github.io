@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>扩展TextWatcher实现监听EditText字数 | evilyin（寒羽光）的博客</title>
+  <meta name="author" content="Leo Chen">
+  
+  <meta name="description" content="寒羽光的博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="扩展TextWatcher实现监听EditText字数"/>
+  <meta property="og:site_name" content="evilyin（寒羽光）的博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="evilyin（寒羽光）的博客" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" type="text/css">
+<link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2015-12-11T12:56:14.000Z"><a href="/2015/12/11/textwatcher/">周五, 12月 11 2015, 8:56:14 晚上</a></time>
+
+  
+    <h1 class="title">扩展TextWatcher实现监听EditText字数</h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/Android/">Android</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>在Android开发中，有时会需要监听某个EditText中已输入的字数，达到要求后触发某个行为，例如账号或者密码输入框限定最少输入6位英文或数字，达到6位后登录按钮才变为可用。Android提供了一个监听EditText的接口TextWatcher，通过调用EditText里的addTextChangedListener()方法实现监听。TextWatcher里面有三个要实现的方法，我试着根据源码里的注释解释一下三个方法的作用：</p>
+<pre><code><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TextWatcher</span> <span class="keyword">extends</span> <span class="title">NoCopySpan</span> </span>{
+
+<span class="comment">// 该方法被调用时说明在s中，从下标start开始的count个字符将要被替换为长度为after的字符串</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeTextChanged</span><span class="params">(CharSequence s, <span class="keyword">int</span> start, <span class="keyword">int</span> count, <span class="keyword">int</span> after)</span></span>;
+
+<span class="comment">// 该方法被调用时说明在s中，从start开始的count个字符刚刚替换掉了长度为before的字符串</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTextChanged</span><span class="params">(CharSequence s, <span class="keyword">int</span> start, <span class="keyword">int</span> before, <span class="keyword">int</span> count)</span></span>;
+
+<span class="comment">// 该方法被调用时说明在s中的某个地方发生了字符变化</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterTextChanged</span><span class="params">(Editable s)</span></span>;
+}
+</code></pre><p>我们要达到的目的是，字符数量满足要求以后执行某操作，字数不够时该操作变为不可执行，因此只需要重写afterTextChanged(Editable s)这个方法就好了。于是我封装了一个抽象类，留出两个抽象方法供使用者实现业务逻辑：</p>
+<pre><code><span class="comment">/**
+ * <span class="doctag">@author</span> evilyin(ChenZhixi)
+ * <span class="doctag">@since</span> 15/10/31
+ */</span>
+<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">TextCountWatcher</span> <span class="keyword">implements</span> <span class="title">TextWatcher</span> </span>{
+    <span class="comment">//要求的字数</span>
+    <span class="keyword">private</span> <span class="keyword">int</span> count;
+
+    <span class="function"><span class="keyword">public</span> <span class="title">TextCountWatcher</span><span class="params">(<span class="keyword">int</span> count)</span> </span>{
+        <span class="keyword">this</span>.count = count;
+    }
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeTextChanged</span><span class="params">(CharSequence s, <span class="keyword">int</span> start, <span class="keyword">int</span> count, <span class="keyword">int</span> after)</span> </span>{
+
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTextChanged</span><span class="params">(CharSequence s, <span class="keyword">int</span> start, <span class="keyword">int</span> before, <span class="keyword">int</span> count)</span> </span>{
+
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterTextChanged</span><span class="params">(Editable s)</span> </span>{
+        <span class="keyword">if</span> (s.length() &gt;= count) {
+            onTextMatchCount();
+        }<span class="keyword">else</span> <span class="keyword">if</span> (s.length() &lt; count) {
+            onTextLessThanCount();
+        }
+    }
+
+    <span class="comment">// 当字数达到或超过要求时触发</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onTextMatchCount</span><span class="params">()</span></span>;
+
+    <span class="comment">// 当字数不够时触发</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onTextLessThanCount</span><span class="params">()</span></span>;
+}
+</code></pre><p>实际使用的例子，mobileNumber是输入手机号的EditText，必须输入11位，才可以点击边上的按钮：</p>
+<pre><code>mobileNumber.addTextChangedListener(<span class="keyword">new</span> TextCountWatcher(<span class="number">11</span>) {
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onTextMatchCount</span><span class="params">()</span> </span>{
+        canClick();
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onTextLessThanCount</span><span class="params">()</span> </span>{
+        notClick();
+    }
+});
+</code></pre><p>有的时候我们还想实现另一个功能，在某个输入框中输入的字数达到上限后就不能输入了，这同样可以通过TextWatcher实现。下面的代码在参考了网上的写法后自己做了些改进：</p>
+<a id="more"></a>
+<pre><code><span class="comment">/**
+ * @author evilyin(ChenZhixi)
+ * @since 15/11/14
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TextLengthWatcher</span> <span class="keyword">implements</span> <span class="title">TextWatcher</span> </span>{
+    <span class="keyword">private</span> <span class="keyword">int</span> length; <span class="comment">//字数限制</span>
+    <span class="keyword">private</span> EditText editText;
+    <span class="keyword">private</span> <span class="keyword">boolean</span> onceLoad = <span class="keyword">true</span>;
+
+    <span class="keyword">public</span> TextLengthWatcher(<span class="keyword">int</span> length, EditText editText) {
+        <span class="keyword">this</span>.length = length;
+        <span class="keyword">this</span>.editText = editText;
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> beforeTextChanged(CharSequence s, <span class="keyword">int</span> start, <span class="keyword">int</span> <span class="keyword">count</span>, <span class="keyword">int</span> after) {
+
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> onTextChanged(CharSequence s, <span class="keyword">int</span> start, <span class="keyword">int</span> before, <span class="keyword">int</span> <span class="keyword">count</span>) {
+        <span class="keyword">int</span> countSize = <span class="number">0</span>;
+        Editable editable = editText.getText();
+        String <span class="keyword">str</span> = editable.toString();
+        <span class="keyword">char</span>[] array = <span class="keyword">str</span>.toCharArray();
+        <span class="keyword">if</span> (onceLoad) {
+            editText.setSelection(s.length());
+            onceLoad = <span class="keyword">false</span>;
+        }
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) {
+            <span class="keyword">if</span> (StringUtil.isChineseChar(<span class="keyword">str</span>.charAt(i)))<span class="comment">/**判断是否为中文*/</span>
+            {
+                countSize += <span class="number">2</span>;<span class="comment">/**如果为中文或者中文特殊符号则占两个字节*/</span>
+            } <span class="keyword">else</span> {
+                countSize += <span class="number">1</span>;<span class="comment">/**英文则占一个字节*/</span>
+            }
+            <span class="keyword">if</span> (countSize &gt; length) {
+                <span class="comment">/**达到最大值*/</span>
+                <span class="keyword">int</span> selEndIndex = Selection.getSelectionEnd(editable);
+                <span class="keyword">str</span> = editable.toString();
+                String newStr = <span class="keyword">str</span>.substring(<span class="number">0</span>, i);
+                editText.setText(newStr);
+                editable = editText.getText();
+                <span class="keyword">int</span> newLen = editable.length();
+                <span class="keyword">if</span> (selEndIndex &gt; newLen) {
+                    selEndIndex = editable.length();
+                }
+                Selection.setSelection(editable, selEndIndex);
+                editText.setTextColor(Color.RED);
+                <span class="keyword">break</span>;
+            } <span class="keyword">else</span> {
+                editText.setTextColor(Color.BLACK);
+            }
+        }
+
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> afterTextChanged(Editable s) {
+
+    }
+
+}
+</code></pre><p>实际使用更方便，不需要实现抽象方法了：</p>
+<pre><code>commentEt.addTextChangedListener(<span class="keyword">new</span> TextLengthWatcher(<span class="number">100</span>, commentEt));
+</code></pre><p><code>commentEt</code>是评论框EditText，限制字数上限100个字符，在达到上限以后无法输入新的字符，并且字体颜色会变红。</p>
+<p>嗯，就这么多了。</p>
+
+      
+    </div>
+    <footer>
+      
+          
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <span class="jiathis_txt">分享到：</span>
+  <a class="jiathis_button_weixin">微信</a>
+  <a class="jiathis_button_tsina">新浪微博</a>
+  <a class="jiathis_button_renren">人人网</a>
+  <a class="jiathis_button_qzone">QQ空间</a>
+  <a class="jiathis_button_douban">豆瓣</a>
+  <a class="jiathis_button_pocket">Pocket</a>
+  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+          <div class="clearfix"></div>
+          <nav id="pagination">
+  
+    <a href="/2016/03/03/algorithm/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
+  
+  
+    <a href="/2015/11/06/NoTitle/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+      <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="/2015/12/11/textwatcher/"></div>
+<!-- Duoshuo Comment END -->
+  
+</section>
+
+
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2016 Leo Chen
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js" type="text/javascript"></script>
+<script src="/js/gallery.js" type="text/javascript"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"evilyin"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>
