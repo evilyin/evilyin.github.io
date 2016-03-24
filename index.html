@@ -97,6 +97,144 @@
   <div class="post-content">
     <header>
       
+      <time datetime="2016-03-24T06:31:07.000Z"><a href="/2016/03/24/topological-sort/">周四, 3月 24 2016, 2:31:07 下午</a></time>
+
+  
+    <h1 class="title"><a href="/2016/03/24/topological-sort/">拓扑排序解决图中是否存在环路问题</a></h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/算法/">算法</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>首先是前段时间网易游戏在线笔试的一道编程题：<a href="http://hihocoder.com/contest/ntest2016spring1/problem/2" target="_blank" rel="external">源代码编译</a></p>
+<p>在leetcode上有一道几乎是一模一样的题目：<a href="https://leetcode.com/problems/course-schedule/" target="_blank" rel="external">207. Course Schedule</a></p>
+<p>大意都是一个图中的某两个节点存在先后顺序，要求判断图中有没有环路。leetcode的提示说的也很明确：这是一个拓扑排序（Topological sort）的问题。</p>
+<p>拓扑排序的定义：设有向图G中节点u和节点v之间存在有向边u-&gt;v，那么对节点排序的结果中，u始终在v的前面。</p>
+<p>从定义中很容易得出，如果G中同时存在有向边u-&gt;v和v-&gt;u，也就是存在一个环路，那么u和v就无法确定谁在谁前面，也就是G无法被拓扑排序。因此，一个有向图能被拓扑排序的充要条件就是它是一个有向无环图。</p>
+<p>数据结构教科书上有拓扑排序的典型算法，我摘录了一下网上对这个算法的总结：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#32500;&#25252;&#19968;&#20010;&#20837;&#24230;&#20026;0&#30340;&#39030;&#28857;&#30340;&#38598;&#21512;&#65306;&#10;&#27599;&#27425;&#20174;&#35813;&#38598;&#21512;&#20013;&#21462;&#20986;(&#27809;&#26377;&#29305;&#27530;&#30340;&#21462;&#20986;&#35268;&#21017;&#65292;&#38543;&#26426;&#21462;&#20986;&#20063;&#34892;&#65292;&#20351;&#29992;&#38431;&#21015;/&#26632;&#20063;&#34892;&#65292;&#19979;&#21516;)&#19968;&#20010;&#39030;&#28857;&#65292;&#23558;&#35813;&#39030;&#28857;&#25918;&#20837;&#20445;&#23384;&#32467;&#26524;&#30340;List&#20013;&#12290;&#10;&#32039;&#25509;&#30528;&#24490;&#29615;&#36941;&#21382;&#30001;&#35813;&#39030;&#28857;&#24341;&#20986;&#30340;&#25152;&#26377;&#36793;&#65292;&#20174;&#22270;&#20013;&#31227;&#38500;&#36825;&#26465;&#36793;&#65292;&#21516;&#26102;&#33719;&#21462;&#35813;&#36793;&#30340;&#21478;&#22806;&#19968;&#20010;&#39030;&#28857;&#65292;&#22914;&#26524;&#35813;&#39030;&#28857;&#30340;&#20837;&#24230;&#22312;&#20943;&#21435;&#26412;&#26465;&#36793;&#20043;&#21518;&#20026;0&#65292;&#37027;&#20040;&#20063;&#23558;&#36825;&#20010;&#39030;&#28857;&#25918;&#21040;&#20837;&#24230;&#20026;0&#30340;&#38598;&#21512;&#20013;&#12290;&#28982;&#21518;&#32487;&#32493;&#20174;&#38598;&#21512;&#20013;&#21462;&#20986;&#19968;&#20010;&#39030;&#28857;&#8230;&#8230;&#8230;&#8230;&#10;&#24403;&#38598;&#21512;&#20026;&#31354;&#20043;&#21518;&#65292;&#26816;&#26597;&#22270;&#20013;&#26159;&#21542;&#36824;&#23384;&#22312;&#20219;&#20309;&#36793;&#65292;&#22914;&#26524;&#23384;&#22312;&#30340;&#35805;&#65292;&#35828;&#26126;&#22270;&#20013;&#33267;&#23569;&#23384;&#22312;&#19968;&#26465;&#29615;&#36335;&#12290;&#19981;&#23384;&#22312;&#30340;&#35805;&#21017;&#36820;&#22238;&#32467;&#26524;List&#65292;&#27492;List&#20013;&#30340;&#39034;&#24207;&#23601;&#26159;&#23545;&#22270;&#36827;&#34892;&#25299;&#25169;&#25490;&#24207;&#30340;&#32467;&#26524;&#12290;</span><br></pre></td></tr></table></figure>
+<p>对于leetcode的这道题，实现这个算法的代码如下：</p>
+<pre><code><span class="function"><span class="keyword">public</span> boolean <span class="title">canFinish</span><span class="params">(<span class="keyword">int</span> numCourses, <span class="keyword">int</span>[][] prerequisites)</span> </span>{
+
+    <span class="comment">// 用矩阵保存题目中的数据，matrix[i][j]表示i-&gt;j的有向边</span>
+    <span class="keyword">int</span>[][] matrix = <span class="keyword">new</span> <span class="keyword">int</span>[numCourses][numCourses]; 
+    <span class="comment">// 记录每个顶点的入度</span>
+    <span class="keyword">int</span>[] indegree = <span class="keyword">new</span> <span class="keyword">int</span>[numCourses];
+
+    <span class="comment">// 初始化</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;prerequisites.length; i++) {
+        <span class="keyword">int</span> ready = prerequisites[i][<span class="number">0</span>];
+        <span class="keyword">int</span> pre = prerequisites[i][<span class="number">1</span>];
+        <span class="keyword">if</span> (matrix[pre][ready] == <span class="number">0</span>)
+            indegree[ready]++; <span class="comment">// 避免重复计算相同的边</span>
+        matrix[pre][ready] = <span class="number">1</span>;
+    }
+
+    <span class="keyword">int</span> count = <span class="number">0</span>; <span class="comment">// 记录出队的顶点个数</span>
+    Queue&lt;Integer&gt; <span class="built_in">queue</span> = <span class="keyword">new</span> LinkedList();
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;indegree.length; i++) {
+        <span class="keyword">if</span> (indegree[i] == <span class="number">0</span>) <span class="built_in">queue</span>.offer(i); <span class="comment">// 入度为0的顶点入队</span>
+    }
+    <span class="keyword">while</span> (!<span class="built_in">queue</span>.isEmpty()) {
+        <span class="keyword">int</span> course = <span class="built_in">queue</span>.poll(); <span class="comment">// 顶点course出队</span>
+        count++;
+        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;numCourses; i++) {
+            <span class="keyword">if</span> (matrix[course][i] != <span class="number">0</span>) { <span class="comment">// 如果存在course-&gt;i的边</span>
+                <span class="keyword">if</span> (--indegree[i] == <span class="number">0</span>) 
+                    <span class="built_in">queue</span>.offer(i);
+                    <span class="comment">// 顶点i的入度减一，如果入度变为0，顶点i入队</span>
+            }
+        }
+    }
+    <span class="comment">// 所有顶点均出队，说明排序完成，反之未完成，存在环路</span>
+    <span class="keyword">return</span> count == numCourses;
+}
+</code></pre><p>上面的算法是基于BFS的，而用DFS同样能做拓扑排序，只不过和BFS正好相反，DFS的算法是维护一个出度为0的顶点集合。由于DFS使用了递归，需要用一段伪代码来描述一下：（来自维基百科）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">L &#8592; Empty list that will contain the sorted nodes&#10;S &#8592; Set of all nodes with no outgoing edges&#10;for each node n in S do&#10;    visit(n) &#10;function visit(node n)&#10;    if n has not been visited yet then&#10;        mark n as visited&#10;        for each node m with an edge from m to n do&#10;            visit(m)&#10;        add n to L</span><br></pre></td></tr></table></figure>
+<p>根据这个思路，在BFS的代码上做一些改动可以得到DFS的代码：</p>
+<pre><code><span class="function"><span class="keyword">public</span> boolean <span class="title">canFinish</span><span class="params">(<span class="keyword">int</span> numCourses, <span class="keyword">int</span>[][] prerequisites)</span> </span>{
+    <span class="keyword">int</span>[][] matrix = <span class="keyword">new</span> <span class="keyword">int</span>[numCourses][numCourses];
+    boolean[] visited = <span class="keyword">new</span> boolean[numCourses];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;prerequisites.length; i++) {
+        <span class="keyword">int</span> ready = prerequisites[i][<span class="number">0</span>];
+        <span class="keyword">int</span> pre = prerequisites[i][<span class="number">1</span>];
+        matrix[pre][ready] = <span class="number">1</span>;
+    }
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;numCourses; i++) {
+        <span class="keyword">if</span> (!visit(matrix, visited, i)) <span class="keyword">return</span> <span class="literal">false</span>;
+    }
+    <span class="keyword">return</span> <span class="literal">true</span>;
+}
+
+<span class="function"><span class="keyword">private</span> boolean <span class="title">visit</span><span class="params">(<span class="keyword">int</span>[][] matrix, boolean[] visited, <span class="keyword">int</span> course)</span> </span>{
+    <span class="keyword">if</span> (visited[course]) <span class="keyword">return</span> <span class="literal">false</span>;
+    <span class="keyword">else</span> {
+        visited[course] = <span class="literal">true</span>;
+        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;visited.length; i++) {
+            <span class="keyword">if</span> (matrix[i][course]!=<span class="number">0</span>) {
+                <span class="keyword">if</span> (!visit(matrix, visited, i)) <span class="keyword">return</span> <span class="literal">false</span>;
+                <span class="comment">// 如果存在i-&gt;course的边，对i递归调用visit方法</span>
+                <span class="comment">// visited.length（numCourses）太大时会超时</span>
+            }
+        }
+        visited[course] = <span class="literal">false</span>;
+        <span class="keyword">return</span> <span class="literal">true</span>;
+    }
+}
+</code></pre><p>然而上面这段代码在leetcode上是会超时的，可能是因为visit函数里的for循环体太长太暴力了，测试的时候numCourses=1000就不行了。可以考虑的优化方式是采用邻接表代替矩阵存储图的数据，这样的话i-&gt;course的边的数量可以确定为邻接表的长度，就不需要暴力搜索整个numCourses的长度了。</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/03/24/topological-sort/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="http://evilyin.info/2016/03/24/topological-sort/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/03/24/topological-sort/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
       <time datetime="2016-03-10T06:36:12.000Z"><a href="/2016/03/10/MonteCarloAlgorithm/">周四, 3月 10 2016, 2:36:12 下午</a></time>
 
   
@@ -231,7 +369,7 @@
   
   <div class="tags">
   	<i class="fa fa-tag"></i>
-    <a href="/tags/算法-Java基础/">算法 Java基础</a>
+    <a href="/tags/算法-Java基础/">算法, Java基础</a>
   </div>
 
 <div class="clear"></div>
