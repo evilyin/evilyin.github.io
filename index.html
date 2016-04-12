@@ -97,10 +97,81 @@
   <div class="post-content">
     <header>
       
-      <time datetime="2016-04-08T12:04:03.000Z"><a href="/2016/04/08/interview/">周五, 4月 8 2016, 8:04:03 晚上</a></time>
+      <time datetime="2016-04-12T11:41:06.000Z"><a href="/2016/04/12/interview-basis/">周二, 4月 12 2016, 7:41:06 晚上</a></time>
 
   
-    <h1 class="title"><a href="/2016/04/08/interview/">面试问题总结之Java基础篇</a></h1>
+    <h1 class="title"><a href="/2016/04/12/interview-basis/">面试问题总结之计算机基础篇</a></h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/计算机基础/">计算机基础</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p><strong>计算机网络</strong></p>
+<ul>
+<li>TCP的建立连接和断开链接</li>
+</ul>
+<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350985085_3123.jpg" alt=""></p>
+<p>为什么要用三次握手，这是被问到过的问题，我没答好。</p>
+<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350985432_2318.jpg" alt=""></p>
+<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350990937_5362.jpg" alt=""></p>
+<p>&lt;未完待续&gt;</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/04/12/interview-basis/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="http://evilyin.info/2016/04/12/interview-basis/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/12/interview-basis/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2016-04-08T12:04:03.000Z"><a href="/2016/04/08/interview-java/">周五, 4月 8 2016, 8:04:03 晚上</a></time>
+
+  
+    <h1 class="title"><a href="/2016/04/08/interview-java/">面试问题总结之Java基础篇</a></h1>
   
 
 
@@ -151,6 +222,11 @@
 </ol>
 <p><strong>集合类</strong></p>
 <p>Java集合类归根结底有三种，List，Map，Set。Java编程思想上把Queue也作为一个基本的集合类，其实我不太懂为什么。Queue和Stack都是由LinkedList实现的，应该也算是从List衍生出去的吧，不懂为什么要和List分开。</p>
+<ul>
+<li>扩容问题</li>
+</ul>
+<p>ArrayList扩容时，是用Arrays.copyOf()方法，传入原数组和新容量大小，返回一个新的数组。再查看copyOf方法时，是调用的System.arraycopy()方法。这个方法是一个native的方法，看不到源码了……</p>
+<p>扩容时新容量是max{原数组容量的1.5倍，传入的参数}。</p>
 <p>&lt;未完待续&gt;</p>
 
       
@@ -158,13 +234,13 @@
     <footer>
       
         <div class="alignleft">
-            <a href="/2016/04/08/interview/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+            <a href="/2016/04/08/interview-java/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
         </div>
         
         
           <div class="alignright"> 
-            <a href="http://evilyin.info/2016/04/08/interview/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/08/interview/">&nbsp;
+            <a href="http://evilyin.info/2016/04/08/interview-java/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/08/interview-java/">&nbsp;
               </span>
             </a>
           </div>
@@ -880,69 +956,6 @@
           <div class="alignright"> 
             <a href="http://evilyin.info/2015/10/12/Android listview 点击item没有变色效果/#comment" class="comment-link">
               <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/10/12/Android listview 点击item没有变色效果/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2015-09-08T09:03:41.000Z"><a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/">周二, 9月 8 2015, 5:03:41 下午</a></time>
-
-  
-    <h1 class="title"><a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/">Android Studio中找不到某些v4包中方法的解决方法</a></h1>
-  
-
-
-
-  
-  <div class="tags">
-  	<i class="fa fa-tag"></i>
-    <a href="/tags/Android/">Android</a>, <a href="/tags/Android-Studio/">Android Studio</a>
-  </div>
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <p>Android Studio中用gradle管理依赖包很好很强大，但是也会有一些特别奇怪的问题。</p>
-<p>自己在做项目的时候碰到这样的问题：原本gradle里的support-v4:23.0.0用的好好的，但是导入另一个依赖包以后，一些比如Fragment里的getContext(), getChildFragmentManager(), addOnPageChangeListener等方法变成红字，找不到了。由于这几个方法都是support-v4包里的，猜想应该是v4包出了问题。<br>
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="http://evilyin.info/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/">&nbsp;
               </span>
             </a>
           </div>

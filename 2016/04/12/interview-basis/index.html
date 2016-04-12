@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>面试问题总结之Java基础篇 | evilyin（寒羽光）的博客</title>
+  <title>面试问题总结之计算机基础篇 | evilyin（寒羽光）的博客</title>
   <meta name="author" content="Leo Chen">
   
   <meta name="description" content="寒羽光的博客">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="面试问题总结之Java基础篇"/>
+  <meta property="og:title" content="面试问题总结之计算机基础篇"/>
   <meta property="og:site_name" content="evilyin（寒羽光）的博客"/>
 
   
@@ -59,10 +59,10 @@
   <div class="post-content">
     <header>
       
-      <time datetime="2016-04-08T12:04:03.000Z"><a href="/2016/04/08/interview/">周五, 4月 8 2016, 8:04:03 晚上</a></time>
+      <time datetime="2016-04-12T11:41:06.000Z"><a href="/2016/04/12/interview-basis/">周二, 4月 12 2016, 7:41:06 晚上</a></time>
 
   
-    <h1 class="title">面试问题总结之Java基础篇</h1>
+    <h1 class="title">面试问题总结之计算机基础篇</h1>
   
 
 
@@ -70,7 +70,7 @@
   
   <div class="tags">
   	<i class="fa fa-tag"></i>
-    <a href="/tags/Java基础/">Java基础</a>
+    <a href="/tags/计算机基础/">计算机基础</a>
   </div>
 
 <div class="clear"></div>
@@ -78,41 +78,14 @@
     </header>
     <div class="entry">
       
-        <p><strong>HashMap、Hashtable</strong></p>
-<p>Java文档里提到的Hashtable和HashMap的区别：一是Hashtable是同步的，二是HashMap可以接受null作为key和value。Hashtable的同步机制实际并不能保证线程安全，有多线程操作时应当选用ConcurrentHashMap。</p>
-<p>还有一些资料列举出来的区别：</p>
+        <p><strong>计算机网络</strong></p>
 <ul>
-<li>数据遍历方式，Hashtable有Iterator和Enumeration，HashMap只有Iterator；</li>
-<li>Hashtable和HashMap用Iterator遍历时都支持fast-fail机制，但是Hashtable用Enumeration遍历时不支持fast-fail；</li>
-<li>HashMap的根据hash值计算数组下标的算法要优于Hashtable，通过对Key的hash做移位运算和位的与运算，使其能更广泛地分散到数组的不同位置；</li>
-<li>Entry数组的长度：<ul>
-<li>Hashtable 缺省初始长度为11，初始化时可以指定initial capacity</li>
-<li>HashMap 缺省初始长度为16，长度始终保持2的n次幂，初始化时可以指定initial capacity，若不是2的幂，HashMap将选取第一个大于initial capacity 的2的n次幂值作为其初始长度。</li>
+<li>TCP的建立连接和断开链接</li>
 </ul>
-</li>
-</ul>
-<p><strong>GC机制</strong></p>
-<p>这东西有点复杂，不敢说懂了多少……只能先记录一些自己的理解。主要参考的是Java编程思想的第5章。</p>
-<p>首先GC有两个关键问题，第一是如何确定某个对象需要被回收，第二是回收的具体算法。</p>
-<ol>
-<li><p>确定某个对象是垃圾：</p>
-<p> 最直接的方法是引用计数法，每个对象都有一个引用计数器，当有一个引用连接到对象上时，计数器加1。当引用离开作用域或被置为null时，计数器减1。但是这种办法不能解决循环引用的问题。</p>
-<p> 为了解决循环引用，引入了另一种办法，主要思想是：对任何有用的对象，一定能追溯到其存活在堆栈或静态存储区中的引用。因此，如果从堆栈和静态存储区开始，遍历所有的引用，就能找到所有“活”的对象。</p>
-</li>
-<li><p>垃圾回收算法：</p>
-<p> 参考：<a href="http://www.cnblogs.com/dolphin0520/p/3783345.html" target="_blank" rel="external">http://www.cnblogs.com/dolphin0520/p/3783345.html</a></p>
-<ul>
-<li><p>“标记-清扫”：通过上面方法找出所有存活对象，每找到一个就给对象设一个标记，当全部标记完成的时候开始清理，没有标记的对象被释放。这种方法会造成可用内存空间不连续，因此需要清理完以后再进行整理，也就是“标记-整理”。</p>
-</li>
-<li><p>“停止-复制”：将所有存活对象从当前堆复制到另一个堆，没有复制的都是垃圾，然后把当前堆的内存全部清理掉。这种方法会把内存分为两个堆，相当于降低了一半的内存使用率；同时如果产生的垃圾很少，那么每次都要复制大量对象到另一处，会很浪费。</p>
-</li>
-<li><p>自适应的分代的算法：主流采用的算法，根据对象存活时间将内存分为“新生代”、“老年代”，新生代里存放生命周期短的临时性对象，老年代存放稳定的长期对象。新生代每次回收都要回收大量垃圾，适合用“停止-复制”算法；老年代回收的垃圾较少，适合用“标记-清扫”算法。这就是一种“自适应”技术。（另外有一种说法是把堆区外的方法区定义为“永久代”，现在好像要改变这个概念，待后续研究。）</p>
-</li>
-</ul>
-</li>
-</ol>
-<p><strong>集合类</strong></p>
-<p>Java集合类归根结底有三种，List，Map，Set。Java编程思想上把Queue也作为一个基本的集合类，其实我不太懂为什么。Queue和Stack都是由LinkedList实现的，应该也算是从List衍生出去的吧，不懂为什么要和List分开。</p>
+<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350985085_3123.jpg" alt=""></p>
+<p>为什么要用三次握手，这是被问到过的问题，我没答好。</p>
+<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350985432_2318.jpg" alt=""></p>
+<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350990937_5362.jpg" alt=""></p>
 <p>&lt;未完待续&gt;</p>
 
       
@@ -139,7 +112,7 @@
           <nav id="pagination">
   
   
-    <a href="/2016/03/24/topological-sort/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+    <a href="/2016/04/08/interview-java/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
   
   <div class="clearfix"></div>
 </nav>
@@ -155,7 +128,7 @@
 
   
       <!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-thread-key="/2016/04/08/interview/"></div>
+<div class="ds-thread" data-thread-key="/2016/04/12/interview-basis/"></div>
 <!-- Duoshuo Comment END -->
   
 </section>
