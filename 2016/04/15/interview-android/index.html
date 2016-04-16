@@ -59,7 +59,7 @@
   <div class="post-content">
     <header>
       
-      <time datetime="2016-04-12T13:02:33.000Z"><a href="/2016/04/12/interview-android/">周二, 4月 12 2016, 9:02:33 晚上</a></time>
+      <time datetime="2016-04-15T13:02:33.000Z"><a href="/2016/04/15/interview-android/">周五, 4月 15 2016, 9:02:33 晚上</a></time>
 
   
     <h1 class="title">面试问题总结之Android篇</h1>
@@ -106,6 +106,11 @@
 <p>设备的设置改变时会触发，如果manifest里设置了<code>android:configChanges</code>属性，才会调用这个方法，默认情况是会重启activity的，也就是得要重新调用<br><code>onCreate()</code>了。</p>
 <p>PS：API13以上在设置了权限<code>android.permission.CHANGE_CONFIGURATION</code>和<code>android:configChanges=&quot;orientation&quot;</code>之后，还是有可能不调用<code>onConfigurationChanged()</code>，需要在<code>android:configChanges</code>里面加一个<code>&quot;screenSize&quot;</code>。</p>
 <p><strong>singleTask 和 singleInstance</strong></p>
+<p>这两个的区别也是一直搞不清楚的问题，综合了文档和一些资料，总结一下：</p>
+<p>首先在manifest的activity标签下还可以设置一项属性叫做taskAffinity，用来标识activity属于哪个task。默认情况下taskAffinity是应用的包名。</p>
+<p>设置了singleTask的activity，如果没有设置taskAffinity，那么启动时还是会在原本的task当中，因为他会去找跟它的taskAffinity相同的task，如果存在这样一个task，就在这个task中启动，如果不存在这样一个task，才创建一个新的task，并在新task中启动。如果已经存在这个activity的实例，那么会调用<code>onNewIntent()</code>。</p>
+<p>singleInstance和singleTask只有一点不一样，设置了singleInstance的activity启动时必然会在新的task当中，而且这个task只会有这一个activity存在。没设置taskAffinity的话，在他之上新建的activity会回到之前的task当中，设置了taskAffinity的话，新建的activity会再另起一个task。</p>
+<p>这部分参考了<a href="http://blog.csdn.net/linmiansheng/article/details/24297375" target="_blank" rel="external">http://blog.csdn.net/linmiansheng/article/details/24297375</a></p>
 <p><strong>点击事件的传递</strong></p>
 <p><strong>view的重绘</strong></p>
 <p>&lt;未完待续&gt;</p>
@@ -150,7 +155,7 @@
 
   
       <!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-thread-key="/2016/04/12/interview-android/"></div>
+<div class="ds-thread" data-thread-key="/2016/04/15/interview-android/"></div>
 <!-- Duoshuo Comment END -->
   
 </section>
