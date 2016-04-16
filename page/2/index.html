@@ -97,6 +97,98 @@
   <div class="post-content">
     <header>
       
+      <time datetime="2015-10-12T13:59:53.000Z"><a href="/2015/10/12/Android listview 点击item没有变色效果/">周一, 10月 12 2015, 9:59:53 晚上</a></time>
+
+  
+    <h1 class="title"><a href="/2015/10/12/Android listview 点击item没有变色效果/">Android listview 点击item没有变色效果</a></h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/Android/">Android</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>又遇一坑：<br>listview里写了半天，发现点击item的时候默认的变灰色的效果没了。</p>
+<p>一开始试着修改listview的属性：<code>android:listSelector</code> 但是改成什么都没有效果。</p>
+<p>后来以为是由于item里面子view把焦点抢走了，导致listview得不到焦点没法响应点击事件，但是写了个OnItemClickListener以后发现点击事件可以正常响应。</p>
+<p>网上找了半天总算找到了原因：因为设置了item的背景颜色导致了默认的点击变色效果失效。如果要设置listview的背景颜色的话直接在listview的属性里设置就好了。如果一定要设置item的背景色，网上给出了一个解决办法：</p>
+<blockquote>
+<p>ListView中设置item的背景色后，默认的行点击颜色失效的解决办法</p>
+<p>本文的方法来自此处：<a href="http://daniel-codes.blogspot.com/2010/07/how-to-change-listview-rows-background.html" target="_blank" rel="external">http://daniel-codes.blogspot.com/2010/07/how-to-change-listview-rows-background.html</a></p>
+<p>只说明一下用法：</p>
+<p>建立一个drawable的XML文件，当然放在drawable文件夹下，比如保存文件为bg_list_item.xml</p>
+<p>输入以下代码：</p>
+</blockquote>
+<pre><code><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+
+<span class="tag">&lt;<span class="title">selector</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span>
+
+  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_window_focused</span>=<span class="value">"false"</span> <span class="attribute">android:state_selected</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@android:color/transparent"</span> /&gt;</span> 
+
+  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_selected</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@android:color/transparent"</span> /&gt;</span> 
+
+  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_pressed</span>=<span class="value">"true"</span> <span class="attribute">android:state_selected</span>=<span class="value">"false"</span> <span class="attribute">android:drawable</span>=<span class="value">"@android:color/transparent"</span> /&gt;</span> 
+
+  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_selected</span>=<span class="value">"false"</span> <span class="attribute">android:drawable</span>=<span class="value">"@color/guide_list_item_bg"</span> /&gt;</span> 
+
+<span class="tag">&lt;/<span class="title">selector</span>&gt;</span>
+</code></pre><blockquote>
+<p>注意红字的地方，改成你想用的背景图片或者颜色。</p>
+<p>在XML布局文件中可以，用 android:background=”@drawable/bg_list_item”   设置。</p>
+<p>在java中可以用 View的  setBackgroundResrouce(R.drawable.bg_list_item);   来设置</p>
+<p>作者：holmes Zhang<br>本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，否则保留追究法律责任的权利。</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2015/10/12/Android listview 点击item没有变色效果/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="http://evilyin.info/2015/10/12/Android listview 点击item没有变色效果/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/10/12/Android listview 点击item没有变色效果/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
       <time datetime="2015-09-08T09:03:41.000Z"><a href="/2015/09/08/Android-Studio中找不到某些v4包中方法的解决方法/">周二, 9月 8 2015, 5:03:41 下午</a></time>
 
   

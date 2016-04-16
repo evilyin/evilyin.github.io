@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>面试问题总结之计算机基础篇 | evilyin（寒羽光）的博客</title>
+  <title>面试问题总结之Android篇 | evilyin（寒羽光）的博客</title>
   <meta name="author" content="Leo Chen">
   
   <meta name="description" content="寒羽光的博客">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="面试问题总结之计算机基础篇"/>
+  <meta property="og:title" content="面试问题总结之Android篇"/>
   <meta property="og:site_name" content="evilyin（寒羽光）的博客"/>
 
   
@@ -59,10 +59,10 @@
   <div class="post-content">
     <header>
       
-      <time datetime="2016-04-12T11:41:06.000Z"><a href="/2016/04/12/interview-basis/">周二, 4月 12 2016, 7:41:06 晚上</a></time>
+      <time datetime="2016-04-12T13:02:33.000Z"><a href="/2016/04/12/interview-android/">周二, 4月 12 2016, 9:02:33 晚上</a></time>
 
   
-    <h1 class="title">面试问题总结之计算机基础篇</h1>
+    <h1 class="title">面试问题总结之Android篇</h1>
   
 
 
@@ -70,7 +70,7 @@
   
   <div class="tags">
   	<i class="fa fa-tag"></i>
-    <a href="/tags/计算机基础/">计算机基础</a>
+    <a href="/tags/Android/">Android</a>
   </div>
 
 <div class="clear"></div>
@@ -78,20 +78,36 @@
     </header>
     <div class="entry">
       
-        <p><strong>计算机网络</strong></p>
+        <p><strong>handler相关</strong></p>
+<p>根据源码里的文档，handler的主要作用有两个：（1）将message和runnable安排在未来的某个时间点执行；（2）将一个操作提交到另一个线程的队列中执行。</p>
+<p>handler的原理一直是个麻烦问题，面试经常会问到，而且总是说不好。我很想把他总结出来，每次面试都可以用同一套内容来回答。以下是我的尝试。</p>
+<p>handler会关联一个looper，looper和messageQueue是一一对应关系。handler可以通过<code>post()</code>和<code>sendMessage()</code>（及各种Delayed、AtTime系列方法）发送消息至messageQueue；looper一直循环从messageQueue里取出message；每个message有一个target，就是发出该message的那个handler，当looper取出message的时候，执行一句：</p>
+<pre><code>msg<span class="class">.target</span><span class="class">.dispatchMessage</span>(msg)
+</code></pre><p><code>dispatchMessage(msg)</code>实际是调用了target handler里的<code>handleMessage()</code>方法，将这个message给回target handler进行处理。于是最终的处理是在创建该handler的线程中执行的。</p>
+<p>举例：更新UI。主线程里创建一个handler实例，将引用传给子线程，子线程完成耗时操作后，使用handler将消息发送至主线程的messageQueue，最后在主线程中执行UI的更新操作。</p>
+<p><strong>生命周期相关</strong></p>
+<p>生命周期应该是很基础的内容了，但是有些细节我依然很模糊。</p>
 <ul>
-<li>TCP的建立连接和断开链接</li>
+<li><code>onPause()</code>, <code>onStop()</code></li>
 </ul>
-<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350985085_3123.jpg" alt=""></p>
-<p>为什么要用三次握手，这是被问到过的问题，我没答好。</p>
-<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350985432_2318.jpg" alt=""></p>
-<p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350990937_5362.jpg" alt=""></p>
-<p><strong>数据库</strong></p>
-<p>数据库事务是指作为单个逻辑单元执行的一系列操作。一个逻辑单元要成为事务，必须满足四个属性：ACID。</p>
-<p>A：Atomicity 原子性，要么全都执行，要么全都不执行；</p>
-<p>C：Consistency 一致性，指一个事务在执行前和执行后，数据库都必须保持一致状态；</p>
-<p>I：Isolation 隔离性，由并发事务做的修改必须与其他并发事务做的修改隔离；</p>
-<p>D：Durability 持久性，事务完成之后，对系统的影响是永久性的。</p>
+<p>源码里的文档说activity只要转入后台就会调用<code>onPause()</code>，在不可见时才会调用<code>onStop()</code>。一般来说<code>onPause()</code>调用之后都会跟着一个<code>onStop()</code>的调用，但是也有的情况是<code>onPause()</code>之后直接到<code>onResume()</code>了。<code>onPause()</code>被执行的可能性是最大的（进程被杀死的时候可能不会调用<code>onStop()</code>和<code>onDestroy()</code>），所以在这个方法里可以进行一些状态保存的操作。</p>
+<ul>
+<li><code>onSaveInstanceState()</code></li>
+</ul>
+<p>状态保存的官方方法，文档里是这么说的：在activity被杀死以回收系统资源的时候这个方法会被调用，可以保存一些状态用作下次<code>onCreate()</code>或者<code>onRestoreInstanceState()</code>的时候恢复。例如activity A上新开了个activity B，A转到后台，由于要回收系统资源而把A杀死了，那么这个方法会被调用。</p>
+<p>文档里还说，不要把这个方法和生命周期里的<code>onPause()</code>, <code>onStop()</code>弄混，有两种情况这个方法不会调用：例如刚才的例子，从B退回到A时，B不会调用这个方法，因为系统认为B的状态不需要保存；或者是B在A前面时，A一直没被杀死，A也不会调用这个方法，因为A的状态一直就在那没变。</p>
+<ul>
+<li><code>onNewIntent()</code></li>
+</ul>
+<p>文档只提到activity在把启动模式设成singleTop，或者intent里面带了<code>FLAG_ACTIVITY_SINGLE_TOP</code>的时候，重新启动activity不会新建一个实例而是调用当前实例的<code>onNewIntent()</code>。但是我感觉启动模式是singleTask或者singleInstance的时候也应该是这样的，网上的一些资料也这么说。</p>
+<ul>
+<li><code>onConfigurationChanged()</code></li>
+</ul>
+<p>设备的设置改变时会触发，如果manifest里设置了<code>android:configChanges</code>属性，才会调用这个方法，默认情况是会重启activity的，也就是得要重新调用<br><code>onCreate()</code>了。</p>
+<p>PS：API13以上在设置了权限<code>android.permission.CHANGE_CONFIGURATION</code>和<code>android:configChanges=&quot;orientation&quot;</code>之后，还是有可能不调用<code>onConfigurationChanged()</code>，需要在<code>android:configChanges</code>里面加一个<code>&quot;screenSize&quot;</code>。</p>
+<p><strong>singleTask 和 singleInstance</strong></p>
+<p><strong>点击事件的传递</strong></p>
+<p><strong>view的重绘</strong></p>
 <p>&lt;未完待续&gt;</p>
 
       
@@ -117,10 +133,8 @@
           <div class="clearfix"></div>
           <nav id="pagination">
   
-    <a href="/2016/04/12/interview-android/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
   
-  
-    <a href="/2016/04/08/interview-java/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+    <a href="/2016/04/12/interview-basis/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
   
   <div class="clearfix"></div>
 </nav>
@@ -136,7 +150,7 @@
 
   
       <!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-thread-key="/2016/04/12/interview-basis/"></div>
+<div class="ds-thread" data-thread-key="/2016/04/12/interview-android/"></div>
 <!-- Duoshuo Comment END -->
   
 </section>

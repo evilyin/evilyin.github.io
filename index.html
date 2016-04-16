@@ -97,6 +97,99 @@
   <div class="post-content">
     <header>
       
+      <time datetime="2016-04-12T13:02:33.000Z"><a href="/2016/04/12/interview-android/">周二, 4月 12 2016, 9:02:33 晚上</a></time>
+
+  
+    <h1 class="title"><a href="/2016/04/12/interview-android/">面试问题总结之Android篇</a></h1>
+  
+
+
+
+  
+  <div class="tags">
+  	<i class="fa fa-tag"></i>
+    <a href="/tags/Android/">Android</a>
+  </div>
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p><strong>handler相关</strong></p>
+<p>根据源码里的文档，handler的主要作用有两个：（1）将message和runnable安排在未来的某个时间点执行；（2）将一个操作提交到另一个线程的队列中执行。</p>
+<p>handler的原理一直是个麻烦问题，面试经常会问到，而且总是说不好。我很想把他总结出来，每次面试都可以用同一套内容来回答。以下是我的尝试。</p>
+<p>handler会关联一个looper，looper和messageQueue是一一对应关系。handler可以通过<code>post()</code>和<code>sendMessage()</code>（及各种Delayed、AtTime系列方法）发送消息至messageQueue；looper一直循环从messageQueue里取出message；每个message有一个target，就是发出该message的那个handler，当looper取出message的时候，执行一句：</p>
+<pre><code>msg<span class="class">.target</span><span class="class">.dispatchMessage</span>(msg)
+</code></pre><p><code>dispatchMessage(msg)</code>实际是调用了target handler里的<code>handleMessage()</code>方法，将这个message给回target handler进行处理。于是最终的处理是在创建该handler的线程中执行的。</p>
+<p>举例：更新UI。主线程里创建一个handler实例，将引用传给子线程，子线程完成耗时操作后，使用handler将消息发送至主线程的messageQueue，最后在主线程中执行UI的更新操作。</p>
+<p><strong>生命周期相关</strong></p>
+<p>生命周期应该是很基础的内容了，但是有些细节我依然很模糊。</p>
+<ul>
+<li><code>onPause()</code>, <code>onStop()</code></li>
+</ul>
+<p>源码里的文档说activity只要转入后台就会调用<code>onPause()</code>，在不可见时才会调用<code>onStop()</code>。一般来说<code>onPause()</code>调用之后都会跟着一个<code>onStop()</code>的调用，但是也有的情况是<code>onPause()</code>之后直接到<code>onResume()</code>了。<code>onPause()</code>被执行的可能性是最大的（进程被杀死的时候可能不会调用<code>onStop()</code>和<code>onDestroy()</code>），所以在这个方法里可以进行一些状态保存的操作。</p>
+<ul>
+<li><code>onSaveInstanceState()</code></li>
+</ul>
+<p>状态保存的官方方法，文档里是这么说的：在activity被杀死以回收系统资源的时候这个方法会被调用，可以保存一些状态用作下次<code>onCreate()</code>或者<code>onRestoreInstanceState()</code>的时候恢复。例如activity A上新开了个activity B，A转到后台，由于要回收系统资源而把A杀死了，那么这个方法会被调用。</p>
+<p>文档里还说，不要把这个方法和生命周期里的<code>onPause()</code>, <code>onStop()</code>弄混，有两种情况这个方法不会调用：例如刚才的例子，从B退回到A时，B不会调用这个方法，因为系统认为B的状态不需要保存；或者是B在A前面时，A一直没被杀死，A也不会调用这个方法，因为A的状态一直就在那没变。</p>
+<ul>
+<li><code>onNewIntent()</code></li>
+</ul>
+<p>文档只提到activity在把启动模式设成singleTop，或者intent里面带了<code>FLAG_ACTIVITY_SINGLE_TOP</code>的时候，重新启动activity不会新建一个实例而是调用当前实例的<code>onNewIntent()</code>。但是我感觉启动模式是singleTask或者singleInstance的时候也应该是这样的，网上的一些资料也这么说。</p>
+<ul>
+<li><code>onConfigurationChanged()</code></li>
+</ul>
+<p>设备的设置改变时会触发，如果manifest里设置了<code>android:configChanges</code>属性，才会调用这个方法，默认情况是会重启activity的，也就是得要重新调用<br><code>onCreate()</code>了。</p>
+<p>PS：API13以上在设置了权限<code>android.permission.CHANGE_CONFIGURATION</code>和<code>android:configChanges=&quot;orientation&quot;</code>之后，还是有可能不调用<code>onConfigurationChanged()</code>，需要在<code>android:configChanges</code>里面加一个<code>&quot;screenSize&quot;</code>。</p>
+<p><strong>singleTask 和 singleInstance</strong></p>
+<p><strong>点击事件的传递</strong></p>
+<p><strong>view的重绘</strong></p>
+<p>&lt;未完待续&gt;</p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2016/04/12/interview-android/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="http://evilyin.info/2016/04/12/interview-android/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2016/04/12/interview-android/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
       <time datetime="2016-04-12T11:41:06.000Z"><a href="/2016/04/12/interview-basis/">周二, 4月 12 2016, 7:41:06 晚上</a></time>
 
   
@@ -124,6 +217,12 @@
 <p>为什么要用三次握手，这是被问到过的问题，我没答好。</p>
 <p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350985432_2318.jpg" alt=""></p>
 <p><img src="http://7xswt9.com2.z0.glb.clouddn.com/1350990937_5362.jpg" alt=""></p>
+<p><strong>数据库</strong></p>
+<p>数据库事务是指作为单个逻辑单元执行的一系列操作。一个逻辑单元要成为事务，必须满足四个属性：ACID。</p>
+<p>A：Atomicity 原子性，要么全都执行，要么全都不执行；</p>
+<p>C：Consistency 一致性，指一个事务在执行前和执行后，数据库都必须保持一致状态；</p>
+<p>I：Isolation 隔离性，由并发事务做的修改必须与其他并发事务做的修改隔离；</p>
+<p>D：Durability 持久性，事务完成之后，对系统的影响是永久性的。</p>
 <p>&lt;未完待续&gt;</p>
 
       
@@ -209,13 +308,16 @@
 <p> 为了解决循环引用，引入了另一种办法，主要思想是：对任何有用的对象，一定能追溯到其存活在堆栈或静态存储区中的引用。因此，如果从堆栈和静态存储区开始，遍历所有的引用，就能找到所有“活”的对象。</p>
 </li>
 <li><p>垃圾回收算法：</p>
-<p> 参考：<a href="http://www.cnblogs.com/dolphin0520/p/3783345.html" target="_blank" rel="external">http://www.cnblogs.com/dolphin0520/p/3783345.html</a></p>
+<p> 参考：</p>
+<p> <a href="http://www.cnblogs.com/dolphin0520/p/3783345.html" target="_blank" rel="external">http://www.cnblogs.com/dolphin0520/p/3783345.html</a></p>
 <ul>
 <li><p>“标记-清扫”：通过上面方法找出所有存活对象，每找到一个就给对象设一个标记，当全部标记完成的时候开始清理，没有标记的对象被释放。这种方法会造成可用内存空间不连续，因此需要清理完以后再进行整理，也就是“标记-整理”。</p>
 </li>
 <li><p>“停止-复制”：将所有存活对象从当前堆复制到另一个堆，没有复制的都是垃圾，然后把当前堆的内存全部清理掉。这种方法会把内存分为两个堆，相当于降低了一半的内存使用率；同时如果产生的垃圾很少，那么每次都要复制大量对象到另一处，会很浪费。</p>
 </li>
 <li><p>自适应的分代的算法：主流采用的算法，根据对象存活时间将内存分为“新生代”、“老年代”，新生代里存放生命周期短的临时性对象，老年代存放稳定的长期对象。新生代每次回收都要回收大量垃圾，适合用“停止-复制”算法；老年代回收的垃圾较少，适合用“标记-清扫”算法。这就是一种“自适应”技术。（另外有一种说法是把堆区外的方法区定义为“永久代”，现在好像要改变这个概念，待后续研究。）</p>
+<p><a href="http://www.cnblogs.com/hnrainll/archive/2013/11/06/3410042.html" target="_blank" rel="external">http://www.cnblogs.com/hnrainll/archive/2013/11/06/3410042.html</a></p>
+<p>这篇提到了很多内存分配相关的内容，因此也放上来作为参考。</p>
 </li>
 </ul>
 </li>
@@ -864,98 +966,6 @@
           <div class="alignright"> 
             <a href="http://evilyin.info/2015/11/06/NoTitle/#comment" class="comment-link">
               <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/11/06/NoTitle/">&nbsp;
-              </span>
-            </a>
-          </div>
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-      <time datetime="2015-10-12T13:59:53.000Z"><a href="/2015/10/12/Android listview 点击item没有变色效果/">周一, 10月 12 2015, 9:59:53 晚上</a></time>
-
-  
-    <h1 class="title"><a href="/2015/10/12/Android listview 点击item没有变色效果/">Android listview 点击item没有变色效果</a></h1>
-  
-
-
-
-  
-  <div class="tags">
-  	<i class="fa fa-tag"></i>
-    <a href="/tags/Android/">Android</a>
-  </div>
-
-<div class="clear"></div>
-      
-    </header>
-    <div class="entry">
-      
-        <p>又遇一坑：<br>listview里写了半天，发现点击item的时候默认的变灰色的效果没了。</p>
-<p>一开始试着修改listview的属性：<code>android:listSelector</code> 但是改成什么都没有效果。</p>
-<p>后来以为是由于item里面子view把焦点抢走了，导致listview得不到焦点没法响应点击事件，但是写了个OnItemClickListener以后发现点击事件可以正常响应。</p>
-<p>网上找了半天总算找到了原因：因为设置了item的背景颜色导致了默认的点击变色效果失效。如果要设置listview的背景颜色的话直接在listview的属性里设置就好了。如果一定要设置item的背景色，网上给出了一个解决办法：</p>
-<blockquote>
-<p>ListView中设置item的背景色后，默认的行点击颜色失效的解决办法</p>
-<p>本文的方法来自此处：<a href="http://daniel-codes.blogspot.com/2010/07/how-to-change-listview-rows-background.html" target="_blank" rel="external">http://daniel-codes.blogspot.com/2010/07/how-to-change-listview-rows-background.html</a></p>
-<p>只说明一下用法：</p>
-<p>建立一个drawable的XML文件，当然放在drawable文件夹下，比如保存文件为bg_list_item.xml</p>
-<p>输入以下代码：</p>
-</blockquote>
-<pre><code><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-
-<span class="tag">&lt;<span class="title">selector</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span>
-
-  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_window_focused</span>=<span class="value">"false"</span> <span class="attribute">android:state_selected</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@android:color/transparent"</span> /&gt;</span> 
-
-  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_selected</span>=<span class="value">"true"</span> <span class="attribute">android:drawable</span>=<span class="value">"@android:color/transparent"</span> /&gt;</span> 
-
-  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_pressed</span>=<span class="value">"true"</span> <span class="attribute">android:state_selected</span>=<span class="value">"false"</span> <span class="attribute">android:drawable</span>=<span class="value">"@android:color/transparent"</span> /&gt;</span> 
-
-  <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:state_selected</span>=<span class="value">"false"</span> <span class="attribute">android:drawable</span>=<span class="value">"@color/guide_list_item_bg"</span> /&gt;</span> 
-
-<span class="tag">&lt;/<span class="title">selector</span>&gt;</span>
-</code></pre><blockquote>
-<p>注意红字的地方，改成你想用的背景图片或者颜色。</p>
-<p>在XML布局文件中可以，用 android:background=”@drawable/bg_list_item”   设置。</p>
-<p>在java中可以用 View的  setBackgroundResrouce(R.drawable.bg_list_item);   来设置</p>
-<p>作者：holmes Zhang<br>本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，否则保留追究法律责任的权利。</p>
-</blockquote>
-
-      
-    </div>
-    <footer>
-      
-        <div class="alignleft">
-            <a href="/2015/10/12/Android listview 点击item没有变色效果/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
-        </div>
-        
-        
-          <div class="alignright"> 
-            <a href="http://evilyin.info/2015/10/12/Android listview 点击item没有变色效果/#comment" class="comment-link">
-              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2015/10/12/Android listview 点击item没有变色效果/">&nbsp;
               </span>
             </a>
           </div>
