@@ -209,7 +209,18 @@
     <div class="entry">
       
         <p>Android Studio中用gradle管理依赖包很好很强大，但是也会有一些特别奇怪的问题。</p>
-<p>自己在做项目的时候碰到这样的问题：原本gradle里的support-v4:23.0.0用的好好的，但是导入另一个依赖包以后，一些比如Fragment里的getContext(), getChildFragmentManager(), addOnPageChangeListener等方法变成红字，找不到了。由于这几个方法都是support-v4包里的，猜想应该是v4包出了问题。<br>
+<p>自己在做项目的时候碰到这样的问题：原本gradle里的support-v4:23.0.0用的好好的，但是导入另一个依赖包以后，一些比如Fragment里的getContext(), getChildFragmentManager(), addOnPageChangeListener等方法变成红字，找不到了。由于这几个方法都是support-v4包里的，猜想应该是v4包出了问题。</p>
+<p>在project下的external libraries下面，发现v4包有两个，一个support-v4:23.0.0，一个support-v4-r7，进一步研究发现v4-r7包里正是缺少那些变红的方法的。于是尝试删除v4-r7，但是并没有用——删除后编译会报错，重启Android Studio以后v4-r7又出现了。</p>
+<p>没办法只能上网找了一圈解决方案，终于找到原因了：导入的依赖包里依赖了v4-r7。解决方案是在gradle的dependencies里找到依赖了v4-r7的包，添加这样一行代码：</p>
+<pre><code><span class="keyword">dependencies</span> {
+    <span class="keyword">compile</span>(<span class="string">'xxx'</span>) {
+        <span class="keyword">exclude</span> module: <span class="string">'support-v4'</span>
+    }
+}
+</code></pre><p>就可以了。</p>
+<p>当然这样的解决方案有副作用，就是依赖了v4-r7的包可能无法正常工作了。这个似乎没有办法。</p>
+<p>网上的解决方案里提到，如果不知道哪个包依赖了的话，可以run <code>gradle -q dependencies</code> 来查看依赖关系。但是我自己尝试了一下，并不能在终端里直接使用这个命令，所以也不知道这个命令到底是怎么用的……</p>
+
       
     </div>
     <footer>

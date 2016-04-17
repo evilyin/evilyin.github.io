@@ -110,7 +110,7 @@
 </code></pre><p>然而，wrong answer了。出错的测试用例是这样：</p>
 <p><code>push(512),push(-1024),push(-1024),push(512),pop,getMin,pop,getMin,pop,getMin</code></p>
 <p>正确的getMin输出结果应该是<code>[-1024,-1024,512]</code>，但是我的结果是<code>[-1024,-1024,-1024]</code></p>
-<p>百思不得其解，代码里怎么都看不出问题在哪，不得已看了别人的答案，思路一模一样的答案里唯一不同的地方在：<br><a id="more"></a></p>
+<p>百思不得其解，代码里怎么都看不出问题在哪，不得已看了别人的答案，思路一模一样的答案里唯一不同的地方在：</p>
 <pre><code><span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">pop</span>() {
     <span class="keyword">int</span> x = stack.<span class="keyword">pop</span>();
     <span class="keyword">if</span> (x==minStack.peek()){

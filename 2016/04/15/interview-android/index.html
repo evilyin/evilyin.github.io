@@ -112,6 +112,15 @@
 <p>singleInstance和singleTask只有一点不一样，设置了singleInstance的activity启动时必然会在新的task当中，而且这个task只会有这一个activity存在。没设置taskAffinity的话，在他之上新建的activity会回到之前的task当中，设置了taskAffinity的话，新建的activity会再另起一个task。</p>
 <p>这部分参考了<a href="http://blog.csdn.net/linmiansheng/article/details/24297375" target="_blank" rel="external">http://blog.csdn.net/linmiansheng/article/details/24297375</a></p>
 <p><strong>点击事件的传递</strong></p>
+<p>故事开始于activity的<code>dispatchTouchEvent()</code>方法，activity收到触摸事件以后调用这个方法进行处理，把事件向下分发给各级view。在activity的这个方法中，先会尝试调用<code>window.superDispatchKeyShortcutEvent()</code>将事件向下分发。如果下面的view有人处理了该事件，则返回true；如果都不处理，则会调用自己的<code>onTouchEvent()</code>方法，返回该方法调用结果。</p>
+<p>继续往下，一般来说下面应该是一个layout了，也就是ViewGroup。ViewGroup里的<code>dispatchTouchEvent()</code>源码特别长，大概内容是调用了自己的<code>onInterceptTouchEvent()</code>方法，查询是否要拦截事件（调用之前还先查了<code>FLAG_DISALLOW_INTERCEPT</code>看是不是允许拦截），根据是否拦截进行不同处理：</p>
+<ul>
+<li>如果不拦截，继续往下分发；</li>
+<li>如果拦截，那么由自己来处理，进入处理流程：首先看自己有没有设置onTouchListener，有的话调用之，没有的话则轮到自己的<code>onTouchEvent()</code>方法，其中还会再看有没有设置onClickListener，有的话调用之。</li>
+</ul>
+<p>如果再往下分发到一个view当中了，view是没有<code>onInterceptTouchEvent()</code>的，他的<code>dispatchTouchEvent()</code>只会分配给自己处理，处理过程和ViewGroup的处理流程一样。</p>
+<p>如果ViewGroup的某个childView的<code>dispatchTouchEvent()</code>返回了true，那么ViewGroup会把他设为target，后续的事件都会直接交给他处理，不用一个个调用所有child的<code>dispatchTouchEvent()</code>方法了。</p>
+<p>如果view的<code>onTouchEvent()</code>返回false了，那么<code>dispatchTouchEvent()</code>会向上层返回false表明自己没有处理该事件，上层ViewGroup按照处理流程来处理。如果上层的ViewGroup处理流程也返回false，那么会一级一级向上直到activity那里。</p>
 <p><strong>view的重绘</strong></p>
 <p>&lt;未完待续&gt;</p>
 
